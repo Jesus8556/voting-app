@@ -1,0 +1,60 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  vote:
+  
+    #build: ./vote
+    image: vote-image
+    ports:
+      - "5000:5000"
+    environment:
+      REDIS_HOST: redis
+    networks:
+      - vote-net
+
+  redis:
+    image: redis:alpine
+    networks:
+      - vote-net
+
+  worker:
+    #build: ./worker/Worker
+    image: worker-image  # El nombre de la imagen construida
+
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      PG_HOST: db
+      PG_PORT: 5432
+      PG_USER: postgres
+      PG_PASSWORD: password
+      PG_DATABASE: voting
+    networks:
+      - vote-net
+
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: voting
+    networks:
+      - vote-net
+
+  result:
+    image: result-image  # El nombre de la imagen construida
+    #build: ./result
+    ports:
+      - "4000:4000"  
+    environment:
+      PG_HOST: db
+      PG_PORT: 5432
+      PG_USER: postgres
+      PG_PASSWORD: password
+      PG_DATABASE: voting
+    networks:
+      - vote-net
+
+networks:
+  vote-net:

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Voting Results</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();  // Conectarse a través de Socket.io
+
+    socket.on("results", (data) => {  // Escuchar la actualización de resultados
+      document.getElementById("results").innerHTML = JSON.stringify(data, null, 2);  // Mostrar resultados
+    });
+  </script>
+</head>
+<body>
+  <h1>Resultados de la Votación</h1>
+  <pre id="results">Cargando...</pre>  <!-- Área para mostrar los resultados -->
+</body>
+</html>' 
